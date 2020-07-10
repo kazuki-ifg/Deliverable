@@ -6,28 +6,28 @@ using UnityEngine.SceneManagement;
 
 public class title : MonoBehaviour
 {
-    public Text press;
-    public Text tx;
-    public Text tx2;
-    public Text esc;
+    public Text press;  //PRESS SPACE を表示するテキスト
+    public Text tx;  //メニューの左側
+    public Text tx2;  //メニューの右側
+    public Text esc;  //escのテキスト
 
-    GameObject Cube;
-    bool flag = true;
-    bool flag2 = true;
+    GameObject Cube;  //カーソル代わりのキューブの宣言
+    bool flag = true;  //二回目のスペースを押したかのフラグ
+    bool flag2 = true;  //一回目のスペースを押したかのフラグ
   
-    public AudioClip select;
-    public AudioClip yes;
-    AudioSource aud;
+    public AudioClip select;  //キューブを動かした時のSE
+    public AudioClip yes;  //スペースを押した時のSE
+    AudioSource aud;  //オーディオソース
 
-    GameObject panel;
-    float alfa;
-    float speed = 0f;
-    float red, green, blue;
+    GameObject panel;  //フェードアウトのためのパネルの宣言
+    float alfa;  //パネルの透明度を決める変数
+    float speed = 0f;  //パネルの透明度を変化させる変数
+    float red, green, blue;  //パネルの色の変数
 
     //タイトル画面全般
     void Start()
     {
-        Cube = GameObject.Find("Cube");
+        Cube = GameObject.Find("Cube");  //キューブの取得
         this.aud = GetComponent<AudioSource>();
         panel = GameObject.Find("Panel");
 
@@ -42,12 +42,12 @@ public class title : MonoBehaviour
     void Update()
     {
         panel.GetComponent<Image>().color = new Color(red, green, blue, alfa);
-        alfa += speed;
+        alfa += speed;                                   //speedに値があるとき、フェードアウトする
         
         //スペース押すとメニューが表示される
         if (flag2 == true &&Input.GetKeyUp(KeyCode.Space) )
         {
-            press.text = null;
+            press.text = null;            
             flag2 = false;
             tx.text = "Tutorial" + "\nStage2";
             tx2.text = "Stage1" + "\nStage3";
@@ -60,17 +60,17 @@ public class title : MonoBehaviour
         Cube.transform.Rotate(new Vector3(1, 1, 1));
         Vector3 Cube_v = Cube.transform.position;
 
-        if (flag2 == false && flag == true)
+        if (flag2 == false && flag == true)  
         {
             
-            if (Cube_v.y ==0  &&Input.GetKeyDown(KeyCode.DownArrow))
+            if (Cube_v.y ==0  &&Input.GetKeyDown(KeyCode.DownArrow))//キューブが上側にある時、下矢印を押すと上に動く
             {
                 Cube_v.y = -3f;
                 Cube.transform.position = Cube_v;
                 this.aud.PlayOneShot(this.select);
             }
 
-            if (Cube_v.y == -3f &&Input.GetKeyDown(KeyCode.UpArrow))
+            if (Cube_v.y == -3f &&Input.GetKeyDown(KeyCode.UpArrow))//キューブが下側にある時、上矢印を押すと上に動く
             {
                 Cube_v.y = 0;
                 Cube.transform.position = Cube_v;
@@ -78,7 +78,7 @@ public class title : MonoBehaviour
             }
 
 
-            if (Cube_v.x == -10 &&Input.GetKeyDown(KeyCode.RightArrow))
+            if (Cube_v.x == -10 &&Input.GetKeyDown(KeyCode.RightArrow))//キューブが左側にある時、右矢印を押すと右に動く
             {
                 Cube_v.x = 1;
                 Cube.transform.position = Cube_v;
@@ -86,7 +86,7 @@ public class title : MonoBehaviour
             }
 
 
-            if (Cube_v.x == 1&&Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Cube_v.x == 1&&Input.GetKeyDown(KeyCode.LeftArrow))//キューブが右側にある時、左矢印を押すと右に動く
             {
                 Cube_v.x = -10;
                 Cube.transform.position = Cube_v;
@@ -99,37 +99,37 @@ public class title : MonoBehaviour
         if (flag2 == false && flag == true && Input.GetKeyDown(KeyCode.Space))
         {
             this.aud.PlayOneShot(this.yes);
-            speed = 0.01f;
+            speed = 0.01f;　　　　//フェードアウトのための変数に代入
             flag = false;
         }
 
 
-        //押した場所に応じてシーン移動
+        //押した場所(キューブの位置)に応じてシーン移動
         if (alfa > 1.5f)
         {
-            if (Cube_v.x == -10f && Cube_v.y == 0)
+            if (Cube_v.x == -10f && Cube_v.y == 0)  //キューブが左上にある時、チュートリアルに移動
             {
                 SceneManager.LoadScene("tutorial");
             }
 
-            if (Cube_v.x == 1f && Cube_v.y == 0)
+            if (Cube_v.x == 1f && Cube_v.y == 0)  //キューブが右上にある時、ステージ１に移動
             {
                 SceneManager.LoadScene("stage1");
             }
 
-            if (Cube_v.x == -10f && Cube_v.y == -3f)
+            if (Cube_v.x == -10f && Cube_v.y == -3f)  //キューブが左下にある時、ステージ２に移動
             {
                 SceneManager.LoadScene("stage2");
             }
 
-            if (Cube_v.x == 1 && Cube_v.y == -3f)
+            if (Cube_v.x == 1 && Cube_v.y == -3f)  //キューブが右上にある時、ステージ３に移動
             {
                 SceneManager.LoadScene("stage3");
             }
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape)) Quit();
+        if (Input.GetKeyDown(KeyCode.Escape)) Quit();  //ESCでQuitを起動
 
      }
 
