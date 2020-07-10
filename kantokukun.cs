@@ -10,7 +10,7 @@ public class kantokukun : MonoBehaviour
     float red, green, blue;
 
 
-    // Start is called before the first frame update
+  
     void Start()
     {
         panel = GameObject.Find("Panel");
@@ -21,7 +21,7 @@ public class kantokukun : MonoBehaviour
         blue = panel.GetComponent<Image>().color.b;
     }
 
-    // Update is called once per frame
+    //UIを変化させ画面をフェードアウトさせる
     void Update()
     {
         panel.GetComponent<Image>().color = new Color(red, green, blue, alfa);

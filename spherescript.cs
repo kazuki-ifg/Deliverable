@@ -36,12 +36,13 @@ public class spherescript : MonoBehaviour
         
     }
 
-    // Update is called once per frame
+  
     void Update()
     {
         Rigidbody rigidbody = GetComponent<Rigidbody>();
-        Vector3 ang = rigidbody.angularVelocity;
         Vector3 vel = rigidbody.velocity;
+        count += count2;
+        //タイムを表示
 
 
         if (timeflag == true)
@@ -52,7 +53,8 @@ public class spherescript : MonoBehaviour
         time.text = "Time : " + timex;
 
        
-        count += count2;
+
+        //カメラがボールを追従
         if (cameraflag == true)
         {
             Vector3 v = transform.position;
@@ -60,10 +62,10 @@ public class spherescript : MonoBehaviour
             v.z -= 11f;
             Camera.main.transform.position = v;
         }
+
+        //ボールのコントロール
         if (flag == true)
         {
-            
-
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 rigidbody.AddForce(new Vector3(-4f, 0, 0f));
@@ -80,8 +82,9 @@ public class spherescript : MonoBehaviour
             {
                 rigidbody.AddForce(new Vector3(0f, 0, -4f));
             }
-
         }
+
+        //速度を制限
         if (flag2 == true)
         {
             if (vel.x > 15)
@@ -112,18 +115,19 @@ public class spherescript : MonoBehaviour
 
 
         Vector3 now = transform.position;
+
+
+        //落下時のリスタート
         if (now.y < -20)
         {
             transform.position = new Vector3(0, 3, 0);
             rigidbody.angularVelocity = Vector3.zero;
             rigidbody.velocity = Vector3.zero;
             flag = false;
-
             cameraflag = true;
-            
-
         }
 
+        //ゴール後、数秒後にシーン移動。シーンによって移動先を変更
         if (count > 2f)
         {
             if (this.thisstage.Contains("stage"))
@@ -159,13 +163,7 @@ public class spherescript : MonoBehaviour
         }
     }
 
-    //private void OnCollisionStay(Collision collision)
-    //{
-    //    if(collision.gameObject.tag == "asiba")
-    //    {
-    //        flag = true;
-    //    }
-    //}
+   
     void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.tag == "MoveStage")
@@ -173,13 +171,10 @@ public class spherescript : MonoBehaviour
             transform.SetParent(null);
         }
 
-        //if(collision.gameObject.tag == "asiba")
-        //{
-        //    flag = false;
-        //}
     }
 
-    private void warp(string str)
+    //ワープパネルのワープメソッド。対応した着地パネルにワープ
+    private void Warp(string str)
     {
         Rigidbody rigidbody = GetComponent<Rigidbody>();
         rigidbody.angularVelocity = Vector3.zero;
@@ -196,6 +191,8 @@ public class spherescript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Rigidbody rigidbody = GetComponent<Rigidbody>();
+        
+        //加速パネル。キー入力を停止しながら対応した方向に移動
         if (other.gameObject.tag.StartsWith("kasoku"))
         {
             rigidbody.angularVelocity = Vector3.zero;
@@ -228,6 +225,8 @@ public class spherescript : MonoBehaviour
             }
 
         }
+
+        //ワープパネルのジャンプ部分
         if (other.gameObject.name.StartsWith("tenni"))
         {
             rigidbody.angularVelocity = Vector3.zero;
@@ -239,24 +238,30 @@ public class spherescript : MonoBehaviour
 
         }
 
+        //ワープパネルのワープ部分。ワープメソッド呼び出し
         if (other.gameObject.name.StartsWith("warp"))
         {
             string s = other.gameObject.name;
             string s1 = s.Remove(0, 4);
-            warp(s1);
+            Warp(s1);
         }
+
+        //ワープ後や加速後に再びキー入力を許可
         if (other.gameObject.name.StartsWith("tyakuti") || other.gameObject.name.StartsWith("stop"))
         {
             flag = true;
             flag2 = true;
         }
 
+        //ワープ後の着地挙動
         if(other.gameObject.name.StartsWith("tyakuti") && tyakutiflag == true)
         {
             this.aud.PlayOneShot(this.tyakutiSE);
             tyakutiflag = false;
         }
 
+
+        //ジャンプパネル。場所により二種類
         if (other.gameObject.tag.StartsWith("jump"))
         {
             this.aud.PlayOneShot(this.jumpSE);
@@ -273,41 +278,21 @@ public class spherescript : MonoBehaviour
         }
        
 
-
+        //ゴール時の挙動。フェードアウトしてからシーン名を保存
         if (other.gameObject.name.StartsWith("goal"))
         {
            
             GameObject goal = GameObject.Find("goal");
-            //ParticleSystem ps = goal.GetComponent<ParticleSystem>();
-            //ps.Play();
             Scene Stage = SceneManager.GetActiveScene();
             this.thisstage = Stage.name;
             count2 = 0.01f;
             timeflag = false;
-            GameObject kantoku = GameObject.Find("kantoku");
-            kantoku.GetComponent<kantokukun>().setspeed(0.01f);
+ 　　　　   GameObject.Find("kantoku").GetComponent<kantokukun>().setspeed(0.01f);
             Clear.text = "CLEAR!!";
             this.aud.PlayOneShot(ClearSE);
         }
 
 
-        //if(count > 1f)
-        //{
-        //    if (this.thisstage.Contains("stage"))
-        //    {
-        //        SceneManager.LoadScene("title");
-        //    }
-
-        //    else if (this.thisstage.StartsWith("tutorial"))
-        //    {
-        //        SceneManager.LoadScene("jumptutorial");
-        //    }
-
-        //    else if (this.thisstage.StartsWith("jumptutorial"))
-        //    {
-        //        SceneManager.LoadScene("warptstage");
-        //    }
-        //}
     }
 }
 

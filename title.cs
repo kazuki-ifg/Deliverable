@@ -10,11 +10,11 @@ public class title : MonoBehaviour
     public Text tx;
     public Text tx2;
     public Text esc;
-    //float time = 0;
+
     GameObject Cube;
     bool flag = true;
     bool flag2 = true;
-   // bool flag3 = false;
+  
     public AudioClip select;
     public AudioClip yes;
     AudioSource aud;
@@ -23,6 +23,8 @@ public class title : MonoBehaviour
     float alfa;
     float speed = 0f;
     float red, green, blue;
+
+    //タイトル画面全般
     void Start()
     {
         Cube = GameObject.Find("Cube");
@@ -42,7 +44,7 @@ public class title : MonoBehaviour
         panel.GetComponent<Image>().color = new Color(red, green, blue, alfa);
         alfa += speed;
         
-
+        //スペース押すとメニューが表示される
         if (flag2 == true &&Input.GetKeyUp(KeyCode.Space) )
         {
             press.text = null;
@@ -54,8 +56,8 @@ public class title : MonoBehaviour
             this.aud.PlayOneShot(this.yes);
         }
 
+        //カーソル代わりのキューブの挙動
         Cube.transform.Rotate(new Vector3(1, 1, 1));
-
         Vector3 Cube_v = Cube.transform.position;
 
         if (flag2 == false && flag == true)
@@ -92,6 +94,8 @@ public class title : MonoBehaviour
             }
         }
 
+
+        //メニューが出てる状態でスペース押したらフェードアウト
         if (flag2 == false && flag == true && Input.GetKeyDown(KeyCode.Space))
         {
             this.aud.PlayOneShot(this.yes);
@@ -99,6 +103,8 @@ public class title : MonoBehaviour
             flag = false;
         }
 
+
+        //押した場所に応じてシーン移動
         if (alfa > 1.5f)
         {
             if (Cube_v.x == -10f && Cube_v.y == 0)
@@ -128,7 +134,7 @@ public class title : MonoBehaviour
      }
 
 
-
+    //終了
     void Quit()
     {
 #if UNITY_EDITOR
@@ -138,22 +144,7 @@ public class title : MonoBehaviour
 #endif
     }
 
-    //time += Time.deltaTime;
-    //if(time > 8)
-    //{
-    //    Renderer renderer = Press.GetComponent<Renderer>();
-    //    renderer.material.color = Color.clear;
-
-    //}
-
-    //if(time == 10)
-    //{
-    //    time = 0;
-    //    Renderer renderer = Press.GetComponent<Renderer>();
-    //    Color color = renderer.material.color;
-    //    color = new Color(1, 0.3f, 0, 1);
-    //    renderer.material.color = color;
-    //}
+   
 
 
 

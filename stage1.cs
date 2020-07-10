@@ -13,7 +13,7 @@ public class stage1 : MonoBehaviour
         CubeB = GameObject.Find("CubeB");
     }
 
-    // Update is called once per frame
+    //ステージ１の回転するオブジェクト
     void Update()
     {
         foreach(GameObject obj in Cube)
